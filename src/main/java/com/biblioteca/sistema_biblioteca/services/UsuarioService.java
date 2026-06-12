@@ -27,7 +27,11 @@ public class UsuarioService
         return null;
     }
 
-public String cadrastrarUsuarios(Usuario usuarioLogado,String novonome,String novoemail,String novasenha,TipoUsuario tipoUsuario)
+public String cadrastrarUsuarios(Usuario usuarioLogado,
+                                 String novonome,
+                                 String novoemail,
+                                 String novasenha,
+                                 TipoUsuario tipoUsuario)
 {
     if(usuarioLogado == null) {
         return "usuario nao autenticado";
