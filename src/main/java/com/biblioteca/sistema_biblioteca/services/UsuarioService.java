@@ -65,7 +65,27 @@ public String cadrastrarUsuarios(Usuario usuarioLogado,
 }
 
 
+public String alterarSenha(Usuario usuarioLogado, String novaSenha,Long idseguranca)
+{
 
+    if(usuarioLogado.getId() != idseguranca)
+    {
+        return "idseguranca errada";
+    }
+
+    usuarioLogado.setSenha(novaSenha);
+
+
+    return "senha alterada com sucesso";
+}
+
+
+public String alterarnome(Usuario usuarioLogado, String novonome)
+{
+    usuarioLogado.setNome(novonome);
+
+    return "nome alterado com sucesso";
+}
 
 
 
