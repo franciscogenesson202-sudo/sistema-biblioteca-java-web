@@ -1,62 +1,48 @@
 package com.biblioteca.sistema_biblioteca.entities;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Setter
 @Getter
-public class Livro
-{
+@Entity
+@Table(name = "livros")
+public class Livro {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long codigo;
-    private String titulo;
     private String autor;
-    private String editora;
-    private double preco;
+    private String titulo;
+    private String resumo;
     private int quantidade;
+    @Column(name = "data_lancamento")
+    private LocalDate data_lancamento;
 
 
     public Livro(long codigo,
                  String titulo,
                  String autor,
-                 String editora,
-                 double preco,
-                 int quantidade)
-    {
+                 int quantidade,
+                 String resumo,
+                 LocalDate data_lancamento) {
         this.codigo = codigo;
         this.titulo = titulo;
         this.autor = autor;
-        this.editora = editora;
-        this.preco = preco;
+        this.resumo = resumo;
         this.quantidade = quantidade;
+        this.data_lancamento = data_lancamento;
 
     }
 
 
 
-    public long getcodigo() {return codigo;}
 
-    public String getTitulo() {return titulo;}
-
-    public String getAutor() {return autor;}
-
-    public String getEditora() {return editora;}
-
-    public double getPreco() {return preco;}
-
-    public int getQuantidade() {return quantidade;}
-
-
-
-    public void setCodigo(long codigo) {this.codigo = codigo;}
-
-    public void setTitulo(String titulo) {this.titulo = titulo;}
-
-    public void setAutor(String autor) {this.autor = autor;}
-
-    public void setEditora(String editora) {this.editora = editora;}
-
-    public void setPreco(double preco) {this.preco = preco;}
-
-    public void setQuantidade(int quantidade) {this.quantidade = quantidade;}
 }

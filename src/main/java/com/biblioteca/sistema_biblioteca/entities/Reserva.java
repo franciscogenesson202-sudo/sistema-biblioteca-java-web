@@ -1,9 +1,19 @@
 package com.biblioteca.sistema_biblioteca.entities;
 
 import com.biblioteca.sistema_biblioteca.enuns.TipoUsuario;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@NoArgsConstructor
+@Entity
+@Table(name = "reservas")
+@Getter
+@Setter
 public class Reserva
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long usuarioId ;
     private long livroId ;
@@ -25,25 +35,8 @@ public class Reserva
 
     }
 
-    public long getId(){return id;}
 
-    public long getUsuarioId(){return usuarioId;}
 
-    public long getLivroId(){return livroId;}
-
-    public String getDataReserva(){return dataReserva;}
-
-    public TipoUsuario getTipoUsuario(){return tipoUsuario;}
-
-    public void setId(long id){this.id = id;}
-
-    public void setUsuarioId(long usuarioId){this.usuarioId = usuarioId;}
-
-    public void setLivroId(long livroId){this.livroId = livroId;}
-
-    public void setDataReserva(String dataReserva){this.dataReserva = dataReserva;}
-
-    public void setTipoUsuario(TipoUsuario tipoUsuario){this.tipoUsuario = tipoUsuario;}
 
 }
 

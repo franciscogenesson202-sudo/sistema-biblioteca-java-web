@@ -1,91 +1,103 @@
 package com.biblioteca.sistema_biblioteca.services;
 
+import com.biblioteca.sistema_biblioteca.dtos.LoginDto;
+import com.biblioteca.sistema_biblioteca.dtos.UsuarioCreateDto;
+import com.biblioteca.sistema_biblioteca.dtos.UsuarioResponseDto;
+import com.biblioteca.sistema_biblioteca.entities.Administrador;
+import com.biblioteca.sistema_biblioteca.entities.Aluno;
 import com.biblioteca.sistema_biblioteca.entities.Usuario;
 import com.biblioteca.sistema_biblioteca.enuns.TipoUsuario;
-import java.util.ArrayList;
-import java.util.List;
+import com.biblioteca.sistema_biblioteca.exception.UsuarioInvalido;
+import com.biblioteca.sistema_biblioteca.repository.AdministradorRepository;
+import com.biblioteca.sistema_biblioteca.repository.AlunoRepository;
+import com.biblioteca.sistema_biblioteca.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-public class UsuarioService
-{
-    private final List<Usuario> usuarios = new ArrayList<>();
-    private long idcontador = 1L;
+import java.util.Optional;
 
-    public UsuarioService()
-    {
-        usuarios.add(new Usuario(idcontador++,"adim.@gmail","admin","admin123", TipoUsuario.ADMIN));
-    }
+@RequiredArgsConstructor
+@Service
+public class UsuarioService {
 
-    public Usuario realizarLogin(String email, String senha)
-    {
-        for (Usuario usuario : usuarios)
+    private final UsuarioRepository usuarioRepository;
+    private final AdministradorRepository administradorRepository;
+    private final AlunoRepository alunoRepository;
+
+    public UsuarioResponseDto criarUsuario(UsuarioCreateDto usuarioDto){
+
+        if(usuarioRepository.quantidadeUsuarios() == 0)
         {
-            if(usuario.getEmail().equals(email) && usuario.getSenha().equals(senha))
-            {
-                return usuario;
-            }
+            Usuario usuario = Usuario.builder()
+                                    .nome(usuarioDto.nome())
+                                    .email(usuarioDto.email())
+                                    //.senha(new BCryptPasswordEncoder().encode(usuarioDto.senha()))
+                                    .senha(usuarioDto.senha())
+                                    .tipoUsuario(TipoUsuario.ADMIN).build();
+            //usuario.setSenha(new BCryptPasswordEncoder().encode((usuario.getSenha())));
+            System.out.println(usuario.getSenha());
+
+            Usuario novoUsuario = usuarioRepository.save(usuario);
+
+            Administrador adm = Administrador.builder().usuario(novoUsuario).build();
+
+            administradorRepository.save(adm);
+
+            return new UsuarioResponseDto(novoUsuario.getId(),
+                                            novoUsuario.getEmail(),
+                                            novoUsuario.getNome(),
+                                            novoUsuario.getTipoUsuario());
         }
-        return null;
-    }
-
-public String cadrastrarUsuarios(Usuario usuarioLogado,
-                                 String novonome,
-                                 String novoemail,
-                                 String novasenha,
-                                 TipoUsuario tipoUsuario)
-{
-    if(usuarioLogado == null) {
-        return "usuario nao autenticado";
-    }
 
 
-    TipoUsuario tipoUsuarioLogado = usuarioLogado.getTipoUsuario();
-
-    if(tipoUsuarioLogado != TipoUsuario.GERENCIADOR && tipoUsuarioLogado != TipoUsuario.ADMIN)
-    {
-        return "tipoUsuarioLogado nao permitido";
-    }
-
-    if(tipoUsuarioLogado == TipoUsuario.GERENCIADOR && tipoUsuario != TipoUsuario.ALUNO)
-    {
-        return "voce nao pode criar esse tipo de usuario";
-    }
-
-
-    for(Usuario user : usuarios)
-    {
-        if(user.getEmail().equalsIgnoreCase(novoemail))
-        {
-
+        if(usuarioRepository.existsByEmail(usuarioDto.email())){
+           throw new UsuarioInvalido("email ja existente");
         }
+
+
+        Usuario usuario = Usuario.builder()
+                .nome(usuarioDto.nome())
+                .email(usuarioDto.email())
+                //.senha(new BCryptPasswordEncoder().encode(usuarioDto.senha()))
+                .senha(usuarioDto.senha())
+                .tipoUsuario(TipoUsuario.ALUNO).build();
+        //usuario.setSenha(new BCryptPasswordEncoder().encode((usuario.getSenha())));
+        System.out.println(usuario.getSenha());
+
+        Usuario novoUsuario = usuarioRepository.save(usuario);
+
+        Aluno aluno = Aluno.builder().usuario(novoUsuario).build();
+
+        alunoRepository.save(aluno);
+
+        return new UsuarioResponseDto(novoUsuario.getId(),
+                novoUsuario.getEmail(),
+                novoUsuario.getNome(),
+                novoUsuario.getTipoUsuario());
+
+
     }
 
 
 
-    return novasenha;
-}
+    public UsuarioResponseDto login(LoginDto loginDto){
+       String email = loginDto.email();
+       String senha = loginDto.senha();
+
+        Optional<Usuario> login = usuarioRepository.loginPorEmailSenha(email, senha);
+
+        if(login.isEmpty()){
+            throw new UsuarioInvalido("email ou senha incorretos");
+        }
+
+        Usuario usuarioLogado = login.get();
 
 
-public String alterarSenha(Usuario usuarioLogado, String novaSenha,Long idseguranca)
-{
-
-    if(usuarioLogado.getId() != idseguranca)
-    {
-        return "idseguranca errada";
+        return new UsuarioResponseDto(usuarioLogado.getId(),
+                usuarioLogado.getEmail(),
+                usuarioLogado.getNome(),
+                usuarioLogado.getTipoUsuario());
     }
-
-    usuarioLogado.setSenha(novaSenha);
-
-
-    return "senha alterada com sucesso";
-}
-
-
-public String alterarnome(Usuario usuarioLogado, String novonome)
-{
-    usuarioLogado.setNome(novonome);
-
-    return "nome alterado com sucesso";
-}
 
 
 
