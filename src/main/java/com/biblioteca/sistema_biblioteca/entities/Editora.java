@@ -16,6 +16,7 @@ public class Editora {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "editora_id")
     private Long id;
 
     private String nome;

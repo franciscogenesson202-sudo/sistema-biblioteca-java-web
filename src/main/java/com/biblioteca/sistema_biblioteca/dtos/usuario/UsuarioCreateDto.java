@@ -1,4 +1,4 @@
-package com.biblioteca.sistema_biblioteca.dtos;
+package com.biblioteca.sistema_biblioteca.dtos.usuario;
 
 public record UsuarioCreateDto(
         String email,

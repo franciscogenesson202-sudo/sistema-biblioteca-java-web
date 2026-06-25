@@ -1,8 +1,8 @@
 package com.biblioteca.sistema_biblioteca.controllers;
 
-import com.biblioteca.sistema_biblioteca.dtos.LoginDto;
-import com.biblioteca.sistema_biblioteca.dtos.UsuarioCreateDto;
-import com.biblioteca.sistema_biblioteca.dtos.UsuarioResponseDto;
+import com.biblioteca.sistema_biblioteca.dtos.usuario.LoginDto;
+import com.biblioteca.sistema_biblioteca.dtos.usuario.UsuarioCreateDto;
+import com.biblioteca.sistema_biblioteca.dtos.usuario.UsuarioResponseDto;
 import com.biblioteca.sistema_biblioteca.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

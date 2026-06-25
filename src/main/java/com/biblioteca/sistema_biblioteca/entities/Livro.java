@@ -4,9 +4,6 @@ package com.biblioteca.sistema_biblioteca.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,31 +15,20 @@ import java.time.LocalDate;
 public class Livro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long codigo;
+    private long id;
     private String autor;
     private String titulo;
     private String resumo;
     private int quantidade;
     @Column(name = "data_lancamento")
-    private LocalDate data_lancamento;
-
-
-    public Livro(long codigo,
-                 String titulo,
-                 String autor,
-                 int quantidade,
-                 String resumo,
-                 LocalDate data_lancamento) {
-        this.codigo = codigo;
-        this.titulo = titulo;
-        this.autor = autor;
-        this.resumo = resumo;
-        this.quantidade = quantidade;
-        this.data_lancamento = data_lancamento;
-
-    }
-
-
+    private String dataLancamento;
+    @ManyToOne
+    @JoinTable(
+            name = "livros_editoras",
+            joinColumns = @JoinColumn(name = "id_livros"),
+            inverseJoinColumns = @JoinColumn(name = "id_editora")
+    )
+    private Editora editora;
 
 
 }
